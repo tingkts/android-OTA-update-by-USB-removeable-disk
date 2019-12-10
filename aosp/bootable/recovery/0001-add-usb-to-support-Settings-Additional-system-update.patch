@@ -1,0 +1,72 @@
+From 3b9af99f8ea2a4e1982e62a29236858f5e6bcafa Mon Sep 17 00:00:00 2001
+From: tingsung <tingsung@msi.com>
+Date: Mon, 2 Dec 2019 14:12:50 +0800
+Subject: [PATCH] add usb to support Settings/Additional system updates
+
+----------------------------------------------------------------------------
+porting from imx6_android6_ms5775_trimble-g7
+-----------------------------------------------------------------------------
+commit 5f8c8ea71fcbfe06a3832c96d85b199dcac10db9
+Author: lilywu <lilywu@msi.com>
+Date:   Tue Aug 22 15:31:38 2017 +0800
+
+    add usb to support Settings/Additional system updates
+-----------------------------------------------------------------------------
+commit 3b9fe55bbffd71fbcc145223b69e232c93935094
+Author: lilywu <lilywu@msi.com>
+Date:   Tue Aug 22 15:24:42 2017 +0800
+
+    add usb to support Settings/Additional system updates
+-----------------------------------------------------------------------------
+---
+ etc/init.rc |  2 ++
+ roots.cpp   | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/etc/init.rc b/etc/init.rc
+index 0fc6c4c1..7d93a4fa 100644
+--- a/etc/init.rc
++++ b/etc/init.rc
+@@ -10,6 +10,7 @@ on init
+     export ANDROID_ROOT /system
+     export ANDROID_DATA /data
+     export EXTERNAL_STORAGE /sdcard
++	export EXTERNAL_STORAGE /udisk
+ 
+     symlink /system/bin /bin
+     symlink /system/etc /etc
+@@ -18,6 +19,7 @@ on init
+     mkdir /acct/uid
+ 
+     mkdir /sdcard
++	mkdir /udisk
+     mkdir /system
+     mkdir /data
+     mkdir /cache
+diff --git a/roots.cpp b/roots.cpp
+index a8f000a4..6429d37f 100644
+--- a/roots.cpp
++++ b/roots.cpp
+@@ -60,6 +60,19 @@ void load_volume_table() {
+     return;
+   }
+ 
++	char build_product[PROPERTY_VALUE_MAX+1];
++	property_get("ro.build.product", build_product, "");
++	if ((strcmp(build_product, "gx12") == 0) || (strcmp(build_product, "g7") == 0)
++      || (strcmp(build_product, "ms5765") == 0)) {
++	    ret = fs_mgr_add_entry(fstab, "/udisk", "vfat", "/dev/block/sda1");
++	    if (ret < 0 ) {
++	        printf("failed to add /udisk entry to fstab\n");
++	        fs_mgr_free_fstab(fstab);
++	        fstab = NULL;
++	        return;
++	    }
++	}
++
+   printf("recovery filesystem table\n");
+   printf("=========================\n");
+   for (int i = 0; i < fstab->num_entries; ++i) {
+-- 
+2.21.0
+
