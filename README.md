@@ -1,0 +1,1 @@
+# android-OTA-update-by-USB-removeable-disk
