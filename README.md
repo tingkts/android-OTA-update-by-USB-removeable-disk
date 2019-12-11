@@ -179,4 +179,13 @@ static int consolelog(const char *fmt, ...) {
 
 <br>
 
+### Notes
+* disable selinux : append [BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive](http://androidxref.com/9.0.0_r3/search?q=%22androidboot.selinux%22&defs=&refs=&path=&hist=&project=art&project=bionic&project=bootable&project=build&project=compatibility&project=cts&project=dalvik&project=developers&project=development&project=device&project=external&project=frameworks&project=hardware&project=kernel&project=libcore&project=libnativehelper&project=packages&project=pdk&project=platform_testing&project=prebuilts&project=sdk&project=system&project=test&project=toolchain&project=tools) to kernel commands.
+```
+@ BoardConfig.mk
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+```
+
+<br>
+
 > base on android 9
