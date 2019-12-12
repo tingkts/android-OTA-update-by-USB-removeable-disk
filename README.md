@@ -194,7 +194,44 @@ static int consolelog(const char *fmt, ...) {
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 ```
 
+* setenforce/getenforce
 
+  library: `LOCAL_STATIC_LIBRARIES += libselinux` or `LOCAL_SHARED_LIBRARIES := libselinux`
+
+  header file: `#include <selinux/selinux.h>`
+
+  [xref: /external/selinux/libselinux/include/selinux/selinux.h](http://androidxref.com/9.0.0_r3/xref/external/selinux/libselinux/include/selinux/selinux.h#329)
+  ```
+  H A D	selinux.h	329 extern int security_setenforce(int value);
+  ```
+
+  [xref: /external/selinux/libselinux/src/setenforce.c](http://androidxref.com/9.0.0_r3/xref/external/selinux/libselinux/src/setenforce.c#12)
+  ```
+  12int security_setenforce(int value)
+  13{
+  14	int fd, ret;
+  15	char path[PATH_MAX];
+  16	char buf[20];
+  17
+  18	if (!selinux_mnt) {
+  19		errno = ENOENT;
+  20		return -1;
+  21	}
+  22
+  23	snprintf(path, sizeof path, "%s/enforce", selinux_mnt);
+  24	fd = open(path, O_RDWR | O_CLOEXEC);
+  25	if (fd < 0)
+  26		return -1;
+  27
+  28	snprintf(buf, sizeof buf, "%d", value);
+  29	ret = write(fd, buf, strlen(buf));
+  30	close(fd);
+  31	if (ret < 0)
+  32		return -1;
+  33
+  34	return 0;
+  35}
+  ```
 
 
 <br>
