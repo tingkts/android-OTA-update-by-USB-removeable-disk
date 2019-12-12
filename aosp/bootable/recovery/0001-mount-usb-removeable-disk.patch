@@ -1,23 +1,8 @@
-From 3b9af99f8ea2a4e1982e62a29236858f5e6bcafa Mon Sep 17 00:00:00 2001
+From 23c68bb4920fd07ff7beb17ee2f4b5e540ff7b29 Mon Sep 17 00:00:00 2001
 From: tingsung <tingsung@msi.com>
 Date: Mon, 2 Dec 2019 14:12:50 +0800
-Subject: [PATCH] add usb to support Settings/Additional system updates
+Subject: [PATCH 1/2] mount usb removeable disk
 
-----------------------------------------------------------------------------
-porting from imx6_android6_ms5775_trimble-g7
------------------------------------------------------------------------------
-commit 5f8c8ea71fcbfe06a3832c96d85b199dcac10db9
-Author: lilywu <lilywu@msi.com>
-Date:   Tue Aug 22 15:31:38 2017 +0800
-
-    add usb to support Settings/Additional system updates
------------------------------------------------------------------------------
-commit 3b9fe55bbffd71fbcc145223b69e232c93935094
-Author: lilywu <lilywu@msi.com>
-Date:   Tue Aug 22 15:24:42 2017 +0800
-
-    add usb to support Settings/Additional system updates
------------------------------------------------------------------------------
 ---
  etc/init.rc |  2 ++
  roots.cpp   | 13 +++++++++++++

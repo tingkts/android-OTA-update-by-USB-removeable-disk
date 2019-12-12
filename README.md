@@ -121,14 +121,19 @@ xref: /frameworks/base/services/core/java/com/android/server/RecoverySystemServi
 319        }
 ```
 
-
+p
 <br>
 
 ### Mount usb disk in the recovery mode
 
-+ [0001-add-usb-to-support-Settings-Additional-system-update.patch](./aosp/bootable/recovery/0001-add-usb-to-support-Settings-Additional-system-update.patch)
+mount usb removeable disk, generally its node is /dev/block/sda1 to the specific mount point /udisk.
 
+  [0001-mount-usb-removeable-disk.patch](./aosp/bootable/recovery/0001-mount-usb-removeable-disk.patch)
 
+  [0002-disable-selinux-before-execute-install_pacakge.patch](./aosp/bootable/recovery/0002-disable-selinux-before-execute-install_pacakge.patch)
+
+!! issue: in the recovery mode, need to close selinux, and thus it can mount /dev/block/sda1 to /udisk,
+otherwise fails. However, they are no avc denied logs to show which rule is violated!
 
 
 
@@ -186,6 +191,10 @@ static int consolelog(const char *fmt, ...) {
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 ```
 
+*
+
+
+<br>
 <br>
 
-> base on android 9
+> Base on android 9
