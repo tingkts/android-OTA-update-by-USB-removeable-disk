@@ -121,7 +121,7 @@ xref: /frameworks/base/services/core/java/com/android/server/RecoverySystemServi
 319        }
 ```
 
-p
+<br>
 <br>
 
 ### Mount usb disk in the recovery mode
@@ -191,7 +191,7 @@ static int consolelog(const char *fmt, ...) {
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 ```
 
-*
+
 
 
 <br>
