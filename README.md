@@ -135,6 +135,9 @@ mount usb removeable disk, generally its node is /dev/block/sda1 to the specific
 !! issue: in the recovery mode, need to close selinux, and thus it can mount /dev/block/sda1 to /udisk,
 otherwise fails. However, they are no avc denied logs to show which rule is violated!
 
+   add sepolicy to allow recovery to setenforce/getenforce
+
+   [0001-add-sepolicy-rule-for-recovery-to-set-getenforce.patch](./aosp/bootable/device/fsl/imx8q/sepolicy/0001-add-sepolicy-rule-for-recovery-to-set-getenforce.patch)
 
 
 

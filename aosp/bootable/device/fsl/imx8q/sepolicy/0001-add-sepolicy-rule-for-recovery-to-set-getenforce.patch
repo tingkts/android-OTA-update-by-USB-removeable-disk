@@ -1,0 +1,33 @@
+From e536f8f308ed6aecdb3a461286f89e4ff6ea864a Mon Sep 17 00:00:00 2001
+From: tingsung <tingsung@msi.com>
+Date: Thu, 12 Dec 2019 20:49:47 +0800
+Subject: [PATCH] add sepolicy rule for recovery to set/getenforce
+
+---
+ imx8q/sepolicy/recovery.te | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/imx8q/sepolicy/recovery.te b/imx8q/sepolicy/recovery.te
+index e71c9248..2540939f 100644
+--- a/imx8q/sepolicy/recovery.te
++++ b/imx8q/sepolicy/recovery.te
+@@ -3,10 +3,13 @@ recovery_only(`
+   allow recovery block_device:dir { read write open ioctl add_name};
+   allow recovery block_device:file { read write open ioctl create};
+   allow recovery self:capability {sys_resource};
+-  allow recovery mtd_device:dir { search }; 
++  allow recovery mtd_device:dir { search };
+   allow recovery mtd_device:chr_file { getattr read write open ioctl};
+-  allow recovery cache_file:dir { mounton }; 
+-  allow recovery debug_prop:property_service { set }; 
++  allow recovery cache_file:dir { mounton };
++  allow recovery debug_prop:property_service { set };
+   allow recovery ffs_prop:property_service { set };
++
++  allow recovery selinuxfs:file { rw_file_perms };
++  permissive recovery;
+ ')
+ 
+-- 
+2.21.0
+
