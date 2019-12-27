@@ -1,0 +1,39 @@
+From 1da806e9841417acea3f48aed4c1f34a96945530 Mon Sep 17 00:00:00 2001
+From: tingsung <tingsung@msi.com>
+Date: Fri, 27 Dec 2019 14:05:04 +0800
+Subject: [PATCH] disable selinux in recovery mode
+
+---
+ init/Android.bp | 2 ++
+ init/Android.mk | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/init/Android.bp b/init/Android.bp
+index af81c8c6f..d2abb07b6 100644
+--- a/init/Android.bp
++++ b/init/Android.bp
+@@ -32,6 +32,8 @@ cc_defaults {
+         "-DWORLD_WRITABLE_KMSG=0",
+         "-DDUMP_ON_UMOUNT_FAILURE=0",
+         "-DSHUTDOWN_ZERO_TIMEOUT=0",
++        "-UALLOW_PERMISSIVE_SELINUX",
++        "-DALLOW_PERMISSIVE_SELINUX=1",
+     ],
+     product_variables: {
+         debuggable: {
+diff --git a/init/Android.mk b/init/Android.mk
+index 092ed5755..8fe3c2fdb 100644
+--- a/init/Android.mk
++++ b/init/Android.mk
+@@ -14,7 +14,7 @@ init_options += \
+ else
+ init_options += \
+     -DALLOW_LOCAL_PROP_OVERRIDE=0 \
+-    -DALLOW_PERMISSIVE_SELINUX=0 \
++    -DALLOW_PERMISSIVE_SELINUX=1 \
+     -DREBOOT_BOOTLOADER_ON_PANIC=0 \
+     -DWORLD_WRITABLE_KMSG=0 \
+     -DDUMP_ON_UMOUNT_FAILURE=0
+-- 
+2.21.0
+

@@ -135,10 +135,13 @@ mount usb removeable disk, generally its node is /dev/block/sda1 to the specific
 !! issue: in the recovery mode, need to close selinux, and thus it can mount /dev/block/sda1 to /udisk,
 otherwise fails. However, they are no avc denied logs to show which rule is violated!
 
+<br>
+
    add sepolicy to allow recovery to setenforce/getenforce
 
    [0001-add-sepolicy-rule-for-recovery-to-set-getenforce.patch](./aosp/bootable/device/fsl/imx8q/sepolicy/0001-add-sepolicy-rule-for-recovery-to-set-getenforce.patch)
 
+!! issue: `permissive recovery;` only allow to be used in eng or user-debug build, can not use it in user build.
 
 
 <br>
@@ -187,11 +190,12 @@ static int consolelog(const char *fmt, ...) {
 
 <br>
 
-### Notes
-* disable selinux : append [BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive](http://androidxref.com/9.0.0_r3/search?q=%22androidboot.selinux%22&defs=&refs=&path=&hist=&project=art&project=bionic&project=bootable&project=build&project=compatibility&project=cts&project=dalvik&project=developers&project=development&project=device&project=external&project=frameworks&project=hardware&project=kernel&project=libcore&project=libnativehelper&project=packages&project=pdk&project=platform_testing&project=prebuilts&project=sdk&project=system&project=test&project=toolchain&project=tools) to kernel commands.
+### Disable selinux in the recovery mode
+* append [BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive](http://androidxref.com/9.0.0_r3/search?q=%22androidboot.selinux%22&defs=&refs=&path=&hist=&project=art&project=bionic&project=bootable&project=build&project=compatibility&project=cts&project=dalvik&project=developers&project=development&project=device&project=external&project=frameworks&project=hardware&project=kernel&project=libcore&project=libnativehelper&project=packages&project=pdk&project=platform_testing&project=prebuilts&project=sdk&project=system&project=test&project=toolchain&project=tools) to kernel commands.
+
 ```
-@ BoardConfig.mk
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+   @ BoardConfig.mk
+   BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 ```
 
 * setenforce/getenforce
@@ -233,6 +237,20 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
   35}
   ```
 
+* print kernel command line:
+  ```
+   cat /proc/cmdline
+  ```
+
+* final solution:
+
+  [append "androidboot.selinux=permissive" into kernel cmdline in uboot](./aosp/vendor/nxp-opensource/uboot-imx/0001-disable-selinux-in-recovery-mode.patch)
+
+  [define DALLOW_PERMISSIVE_SELINUX in init service](./aosp/system/core/0001-disable-selinux-in-recovery-mode.patch)
+
+<br>
+
+ref: [【Android】如何配置打开和关闭selinux by xlnaan](https://blog.csdn.net/xlnaan/article/details/87867698)
 
 <br>
 <br>

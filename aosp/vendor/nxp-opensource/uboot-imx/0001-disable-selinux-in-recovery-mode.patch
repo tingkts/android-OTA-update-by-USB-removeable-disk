@@ -1,0 +1,66 @@
+From 3e1339976eac4e32f97bb578ccfc5490832ffe59 Mon Sep 17 00:00:00 2001
+From: tingsung <tingsung@msi.com>
+Date: Fri, 27 Dec 2019 11:56:10 +0800
+Subject: [PATCH] disable selinux in recovery mode
+
+---
+ common/image-android.c          | 11 +++++++++++
+ drivers/usb/gadget/f_fastboot.c |  4 ++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/common/image-android.c b/common/image-android.c
+index 145e87e72f..6e956baf8d 100644
+--- a/common/image-android.c
++++ b/common/image-android.c
+@@ -154,15 +154,26 @@ int android_image_get_kernel(const struct andr_img_hdr *hdr, int verify,
+ 			storage_type);
+ 		strncat(commandline, newbootargs, sizeof(commandline) - strlen(commandline));
+ 	} else {
++		extern int enable_recovery;
+ 		int bootdev = get_boot_device();
+ 		if (bootdev == SD1_BOOT || bootdev == SD2_BOOT ||
+ 			bootdev == SD3_BOOT || bootdev == SD4_BOOT) {
+ 			sprintf(newbootargs,
+ 				" androidboot.storage_type=sd");
++			if (enable_recovery){
++				strncat(commandline, newbootargs, sizeof(commandline) - strlen(commandline));
++				sprintf(newbootargs,
++					" androidboot.dm_verity=disabled androidboot.selinux=permissive");
++			}
+ 		} else if (bootdev == MMC1_BOOT || bootdev == MMC2_BOOT ||
+ 			bootdev == MMC3_BOOT || bootdev == MMC4_BOOT) {
+ 			sprintf(newbootargs,
+ 				" androidboot.storage_type=emmc");
++			if (enable_recovery){
++				strncat(commandline, newbootargs, sizeof(commandline) - strlen(commandline));
++				sprintf(newbootargs,
++					" androidboot.dm_verity=disabled androidboot.selinux=permissive");
++			}
+ 		} else if (bootdev == NAND_BOOT) {
+ 			sprintf(newbootargs,
+ 				" androidboot.storage_type=nand");
+diff --git a/drivers/usb/gadget/f_fastboot.c b/drivers/usb/gadget/f_fastboot.c
+index f06cd6dc1c..935d02329e 100644
+--- a/drivers/usb/gadget/f_fastboot.c
++++ b/drivers/usb/gadget/f_fastboot.c
+@@ -1912,6 +1912,9 @@ static void fastboot_setup_system_boot_args(const char *slot, bool append_root)
+ 	}
+ }
+ #endif
++
++int enable_recovery = 0;
++
+ /* export to lib_arm/board.c */
+ void fastboot_run_bootmode(void)
+ {
+@@ -1926,6 +1929,7 @@ void fastboot_run_bootmode(void)
+ 	case BOOTMODE_RECOVERY_BCB_CMD:
+ 	case BOOTMODE_RECOVERY_KEY_PRESSED:
+ 		/* Make the boot into recovery mode */
++		enable_recovery = 1;
+ 		puts("Fastboot: Got Recovery key pressing or recovery commands!\n");
+ 		board_recovery_setup();
+ 		break;
+-- 
+2.21.0
+
