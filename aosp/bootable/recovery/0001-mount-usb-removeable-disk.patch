@@ -1,12 +1,12 @@
-From 23c68bb4920fd07ff7beb17ee2f4b5e540ff7b29 Mon Sep 17 00:00:00 2001
+From aed8e5e8a98743f2f0d5d5b587224c38e65a3b17 Mon Sep 17 00:00:00 2001
 From: tingsung <tingsung@msi.com>
 Date: Mon, 2 Dec 2019 14:12:50 +0800
-Subject: [PATCH 1/2] mount usb removeable disk
+Subject: [PATCH] mount usb removeable disk
 
 ---
- etc/init.rc |  2 ++
- roots.cpp   | 13 +++++++++++++
- 2 files changed, 15 insertions(+)
+ etc/init.rc | 2 ++
+ roots.cpp   | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
 diff --git a/etc/init.rc b/etc/init.rc
 index 0fc6c4c1..7d93a4fa 100644
@@ -29,25 +29,20 @@ index 0fc6c4c1..7d93a4fa 100644
      mkdir /data
      mkdir /cache
 diff --git a/roots.cpp b/roots.cpp
-index a8f000a4..6429d37f 100644
+index a8f000a4..11856185 100644
 --- a/roots.cpp
 +++ b/roots.cpp
-@@ -60,6 +60,19 @@ void load_volume_table() {
+@@ -60,6 +60,14 @@ void load_volume_table() {
      return;
    }
  
-+	char build_product[PROPERTY_VALUE_MAX+1];
-+	property_get("ro.build.product", build_product, "");
-+	if ((strcmp(build_product, "gx12") == 0) || (strcmp(build_product, "g7") == 0)
-+      || (strcmp(build_product, "ms5765") == 0)) {
-+	    ret = fs_mgr_add_entry(fstab, "/udisk", "vfat", "/dev/block/sda1");
-+	    if (ret < 0 ) {
-+	        printf("failed to add /udisk entry to fstab\n");
-+	        fs_mgr_free_fstab(fstab);
-+	        fstab = NULL;
-+	        return;
-+	    }
-+	}
++  ret = fs_mgr_add_entry(fstab, "/udisk", "vfat", "/dev/block/sda1");
++  if (ret < 0 ) {
++      printf("failed to add /udisk entry to fstab\n");
++      fs_mgr_free_fstab(fstab);
++      fstab = NULL;
++      return;
++  }
 +
    printf("recovery filesystem table\n");
    printf("=========================\n");
