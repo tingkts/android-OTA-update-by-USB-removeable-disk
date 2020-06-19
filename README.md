@@ -257,4 +257,4 @@ ref: [【Android】如何配置打开和关闭selinux by xlnaan](https://blog.cs
 <br>
 <br>
 
-> Base on android 9
+> Base on android 9 with Non-A/B update system mechanism.
